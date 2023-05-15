@@ -45,7 +45,7 @@
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1 - Integers
-    class Integers {
+    
       // 🧠 Constructor takes **any** number of arguments, which are integers
       // 🧠 Instances have an `ints` property which is an array holding the integers above in the same order
       // 🧠 Implement a `getAll` method which returns the data held in the `ints` property
@@ -58,11 +58,58 @@
       // 🧠 Implement a `getAllReversed` method which returns the ints in reverse order
       // ❗ WARNING: except for `getAllReversed`, methods must respect the order of the integers
       // ❗ WARNING: note that none of the methods actually mutate the `ints` property
-
+      class Integers {
+        constructor(...integers) {
+          this.ints = [...integers];
+        } 
+        getAll() {
+          return this.ints
+        } 
+        getEvens() {
+          const evenArr = []
+          for (let i = 0; i < this.ints.length; i++) {
+            if (this.ints[i] % 2 === 0) {
+              evenArr.push(this.ints[i]);
+            }
+          } return evenArr;
+        } 
+        getNegatives () { 
+          let negArr = []
+          for (let i = 0; i < this.ints.length; i++) {
+          if (this.ints[i] < 0) {
+            negArr.push(this.ints[i]);
+            } 
+          } return negArr;
+        } 
+        getAllSquared() {
+          const allSquared = []
+          this.ints.map(integer => allSquared.push(integer ** 2));
+          return allSquared;
+        } 
+        pop() {
+          return this.ints.pop()
+        } 
+        push(int) {
+          this.ints.push(int)
+          return this.ints
+        }
+        getEveryNth(n) {
+          let nthArr = []
+          for (let i = 0; i < this.ints.length; i+= n) {
+            nthArr.push(this.ints[i])
+          }
+          return nthArr
+        } 
+        getAllReversed() {
+          const reverseArr = []
+          for (let i = this.ints.length - 1; i >= 0; i--) {
+            reverseArr.push(this.ints[i])
+          } return reverseArr
+        }
     }
 
+
     // 👉 CHALLENGE 2 NerfGun
-    class NerfGun {
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -76,11 +123,43 @@
       //      * When engaging the safety, return "Safety enabled!"
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
+      class NerfGun {
+        constructor(ammo) {
+          this.safetyOn = true
+          this.capacity = ammo
+          this.ammo = ammo
+        }
+        toggleSafety() {
+          if (this.safetyOn) {
+            this.safetyOn = !this.safetyOn
+            return `Safety disabled!`
+          } else if (!this.safetyOn) {
+            this.safetyOn = !this.safetyOn
+            return `Safety enabled!`
+          }
+        }
+        shoot() {
+          if ((this.ammo) && (!this.safetyOn)) {
+            this.ammo--
+            return `Bang!`
+          } else if ((this.ammo <= 0) || (this.safetyOn)) {
+            return `Click!`
+          }
+        }
+        reload(num) {
+          if (!(typeof num === 'number' && num > 0)) {
+            return `Error reloading!`
+          }
+          this.ammo+= num
+          if (this.ammo > this.capacity) {
+            this.ammo = this.capacity
 
+          } return `${this.ammo} projectiles left!`
+        }
     }
 
+
     // 👉 CHALLENGE 3 EBook
-    class EBook {
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -95,8 +174,28 @@
       //    ebook.next() // returns null
       // 🌟 HINT: remember about the `slice` method of arrays
       // ❗ Feel free to implement `back`, although this is not required nor graded
+      
+    class EBook {
+      constructor(text, charsPerPage) {
+        this.text = text
+        this.charsPerPage = charsPerPage;
+        this.currentPage = 0;
+      }
+      next() {
+        const start = this.currentPage * this.charsPerPage
+        const end = start + this.charsPerPage
+        const page = this.text.slice(start, end);
 
+        if (page.length > 0) {
+          this.currentPage++ 
+          return page;
+        } else {
+          return null
+        }
+      }
     }
+
+
 
     // 👉 CHALLENGE 4 AntFarm
     class AntFarm {
@@ -131,7 +230,38 @@
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
 
+      constructor(...ants) {
+  this.ants = ants.map(name => ({ name, health: 100 }));
+}
+
+work() {
+    if (this.ants.length === 0) {
+      return "No ants here. Did you work them to death?";
     }
+
+    let startingAnts = this.ants.length;
+    this.ants.forEach(ant => {
+      ant.health -= 20;
+      if (ant.health <= 0) {
+        this.ants = this.ants.filter(a => a !== ant);
+      }
+    });
+
+    return `${startingAnts} ants starting work!`;
+  }
+feed(name) {
+  const antsToUpdate = this.ants.filter(ant => ant.name === name);
+  if (antsToUpdate.length === 0) {
+    return `${name} not found!`;
+  }
+
+  this.ants = this.ants.map(ant => 
+    ant.name === name ? { ...ant, health: ant.health + 15 } : ant
+  );
+
+  return `Yum!`;
+}
+}
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
